@@ -9,4 +9,14 @@ app.get("/", (req, res, next) => {
   });
 });
 
+app.get("/users", (req, res, next) => {
+  res.status(200).json({
+    success: true,
+    users: [
+      { id: 1, name: "Mohsin shoaib" },
+      { id: 2, name: "Shoaib Ahmad" },
+    ],
+  });
+});
+
 export default app;
