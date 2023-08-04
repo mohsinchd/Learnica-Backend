@@ -1,22 +1,25 @@
 import express from "express";
+import cookieParser from "cookie-parser";
+import { errorMiddleware, notFound } from "./middlewares/errorMiddleware.js";
 
 const app = express();
 
-app.get("/", (req, res, next) => {
-  res.status(200).json({
-    success: true,
-    message: "API is Working fine.",
-  });
-});
+// Global Middlewares
+app.use(express.json());
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
+app.use(cookieParser());
 
-app.get("/users", (req, res, next) => {
-  res.status(200).json({
-    success: true,
-    users: [
-      { id: 1, name: "Mohsin shoaib" },
-      { id: 2, name: "Shoaib Ahmad" },
-    ],
-  });
-});
+// Routes Imports
+import userRoutes from "./routes/userRoutes.js";
+
+app.use("/api/v1/user", userRoutes);
 
 export default app;
+
+// ErrorHandlers
+app.use(notFound);
+app.use(errorMiddleware);
