@@ -1,12 +1,40 @@
 import app from "./app.js";
 import { config } from "dotenv";
+import { connectDB } from "./config/connectDb.js";
+import cloudinary from "cloudinary";
+
+// Uncaught Rejections
+process.on("uncaughtException", (error) => {
+  console.log(`Shutting down the server due to uncaught error`);
+  console.log(`Error: ${error.message}`);
+  process.exit(1);
+});
 
 // Dotenv Configuration
 config({
   path: "./config/config.env",
 });
 
-const port = process.env.PORT || 8000;
-app.listen(port, () => {
-  console.log(`Server is running on the PORT: ${port}`);
+// Database connection
+connectDB();
+
+// Cloudinary configuration
+cloudinary.v2.config({
+  cloud_name: process.env.CLOUDINARY_CLIENT_NAME,
+  api_key: process.env.CLOUDINARY_CLIENT_API,
+  api_secret: process.env.CLOUDINARY_CLIENT_SECRET,
+});
+
+const PORT = process.env.PORT || 8000;
+const server = app.listen(PORT, () => {
+  console.log(`Server is running on PORT: ${PORT}`);
+});
+
+// Unhandled Promise Rejections
+process.on("unhandledRejection", (error) => {
+  console.log(`Error: ${error.message}`);
+  console.log(`Shutting down the server due to Unhandled Promise Rejection`);
+  server.close(() => {
+    process.exit(1);
+  });
 });
