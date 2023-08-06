@@ -4,6 +4,8 @@ import { catchAsyncErrors } from "../middlewares/catchAsyncErrors.js";
 import cloudinary from "cloudinary";
 import getDataUri from "../utils/dataUri.js";
 import { sendToken } from "../utils/sendToken.js";
+import { sendEmail } from "../utils/sendEmail.js";
+import crypto from "crypto";
 
 // Register New User
 export const registerUser = catchAsyncErrors(async (req, res, next) => {
@@ -81,5 +83,137 @@ export const getUserProfile = catchAsyncErrors(async (req, res, next) => {
   res.status(200).json({
     success: true,
     user,
+  });
+});
+
+// Update User Profile
+export const updateUserProfile = catchAsyncErrors(async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+
+  const { name, email } = req.body;
+
+  if (name) user.name = name;
+  if (email) user.email = email;
+
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+    message: "User Profile Updated.",
+  });
+});
+
+// Update User Password
+export const changePassword = catchAsyncErrors(async (req, res, next) => {
+  const { oldPassword, newPassword } = req.body;
+
+  const user = await User.findById(req.user._id);
+
+  // Match Old password in the DB.
+
+  const isMatched = await user.isPasswordMatched(oldPassword);
+
+  if (!isMatched) {
+    return next(new ErrorHandler("Old Password is incorrect.", 400));
+  }
+
+  user.password = newPassword;
+
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+    message: "Password Updated Successfully.",
+  });
+});
+
+// Forgot Password
+export const forgotPassword = catchAsyncErrors(async (req, res, next) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return next(new ErrorHandler("Email is Required.", 400));
+  }
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    return next(new ErrorHandler("No User Found with the given email.", 404));
+  }
+
+  const resetToken = user.getResetToken();
+
+  await user.save();
+
+  const url = `${process.env.FRONTEND_URL}/api/v1/user/resetPassword/${resetToken}`;
+
+  const message = `${url}`;
+
+  await sendEmail(user.email, "Learnica Reset Password", message);
+
+  res.status(200).json({
+    success: true,
+    message: `Reset Token has been sent to ${user.email}`,
+  });
+});
+
+// Reset Password
+export const resetPassword = catchAsyncErrors(async (req, res, next) => {
+  const { token } = req.params;
+
+  const { newPassword } = req.body;
+
+  const hashedToken = crypto.createHash("sha256").update(token).digest("hex");
+
+  const user = await User.findOne({
+    resetPasswordToken: hashedToken,
+    resetPasswordExpire: {
+      $gt: Date.now(),
+    },
+  });
+
+  if (!user) {
+    return next(
+      new ErrorHandler("Reset Token is Invalid or has been expired", 400)
+    );
+  }
+
+  user.password = newPassword;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpire = undefined;
+
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+    message: "Password Reset Successfully. Login with your new password.",
+  });
+});
+
+// Update Profile Picture
+export const updateProfilePicture = catchAsyncErrors(async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+
+  const file = req.file;
+
+  if (!file) {
+    return next(new ErrorHandler("Image is Required.", 400));
+  }
+
+  const fileUri = getDataUri(file);
+
+  const myCloud = await cloudinary.v2.uploader.upload(fileUri.content);
+  await cloudinary.v2.uploader.destroy(user.avatar.public_id);
+
+  user.avatar = {
+    public_id: myCloud.public_id,
+    url: myCloud.secure_url,
+  };
+
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+    message: "Profile Picture Updated.",
   });
 });
