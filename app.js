@@ -16,6 +16,19 @@ app.use(cookieParser());
 // Routes Imports
 import userRoutes from "./routes/userRoutes.js";
 
+// "/" route
+
+app.get("/", (req, res, next) => {
+  res.send(`
+  <h1>
+  Application is working fine.
+  <a href="${process.env.FRONTEND_URL}">
+  Click here to use.
+  </a>
+  </h1>
+  `);
+});
+
 app.use("/api/v1/user", userRoutes);
 
 export default app;
