@@ -9,6 +9,7 @@ app.use(express.json());
 app.use(
   express.urlencoded({
     extended: true,
+    limit: "1gb",
   })
 );
 app.use(cookieParser());
