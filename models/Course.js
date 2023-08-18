@@ -27,7 +27,20 @@ const courseSchema = new mongoose.Schema({
 
   category: {
     type: String,
-    required: true,
+    required: [true, "Category is Required."],
+  },
+
+  courseFor: {
+    type: String,
+    required: [
+      true,
+      "Please tell the audience who is eligible to purchase this course.",
+    ],
+  },
+
+  preReq: {
+    type: String,
+    required: [true, "Please enter the Pre requistes for this course."],
   },
 
   instructor: {

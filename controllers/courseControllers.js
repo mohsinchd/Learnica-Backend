@@ -42,7 +42,7 @@ export const getCourseDetails = catchAsyncErrors(async (req, res, next) => {
 
 // Create New Course - Private
 export const createNewCourse = catchAsyncErrors(async (req, res, next) => {
-  const { title, description, category, price } = req.body;
+  const { title, description, category, price, preReq, courseFor } = req.body;
 
   const file = req.file;
 
@@ -69,6 +69,8 @@ export const createNewCourse = catchAsyncErrors(async (req, res, next) => {
       url: myCloud.secure_url,
     },
     instructor: req.user._id,
+    preReq,
+    courseFor,
   });
 
   res.status(201).json({
@@ -87,7 +89,7 @@ export const updateCourse = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("No Course Found with the given Id.", 404));
   }
 
-  const { title, description, category, price } = req.body;
+  const { title, description, category, price, preReq, courseFor } = req.body;
   const file = req.file;
 
   if (title) course.title = title;
@@ -103,6 +105,8 @@ export const updateCourse = catchAsyncErrors(async (req, res, next) => {
       url: myCloud.secure_url,
     };
   }
+  if (preReq) course.preReq = preReq;
+  if (courseFor) course.courseFor = courseFor;
 
   await course.save();
 
