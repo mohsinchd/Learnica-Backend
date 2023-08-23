@@ -4,12 +4,15 @@ import {
   deleteCourse,
   getAllCourses,
   getCourseDetails,
+  getInstructorCourses,
   updateCourse,
 } from "../controllers/courseControllers.js";
 import { isAuthenticated } from "../middlewares/auth.js";
 import singleUpload from "../middlewares/multer.js";
 
 const router = express.Router();
+
+router.route("/instructor/courses").get(isAuthenticated, getInstructorCourses);
 
 router
   .route("/")

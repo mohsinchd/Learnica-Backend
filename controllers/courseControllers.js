@@ -40,6 +40,16 @@ export const getCourseDetails = catchAsyncErrors(async (req, res, next) => {
   });
 });
 
+// Get Instructor's Courses - Private
+export const getInstructorCourses = catchAsyncErrors(async (req, res, next) => {
+  const courses = await Course.find({ instructor: req.user._id });
+
+  res.status(200).json({
+    success: true,
+    courses,
+  });
+});
+
 // Create New Course - Private
 export const createNewCourse = catchAsyncErrors(async (req, res, next) => {
   const { title, description, category, price, preReq, courseFor } = req.body;
@@ -117,7 +127,6 @@ export const updateCourse = catchAsyncErrors(async (req, res, next) => {
 });
 
 // Delete Course -> Private
-
 export const deleteCourse = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
 
