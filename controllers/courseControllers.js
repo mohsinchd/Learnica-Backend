@@ -161,3 +161,101 @@ export const deleteCourse = catchAsyncErrors(async (req, res, next) => {
     message: "Course Deleted Successfully.",
   });
 });
+
+// Create Course Review or Update the existing..
+export const createCourseReview = catchAsyncErrors(async (req, res, next) => {
+  const { rating, comment, courseId } = req.body;
+
+  if (!rating || !comment) {
+    return next(new ErrorHandler("Rating and Comment is Required.", 400));
+  }
+
+  const review = {
+    user: req.user._id,
+    name: req.user.name,
+    rating: Number(rating),
+    comment,
+  };
+
+  const course = await Course.findById(courseId);
+
+  const isReviewed = course.reviews.find(
+    (rev) => rev.user._id.toString() === req.user._id.toString()
+  );
+
+  if (isReviewed) {
+    course.reviews.forEach((rev) => {
+      if (rev.user._id.toString() === req.user._id.toString()) {
+        rev.rating = rating;
+        rev.comment = comment;
+      }
+    });
+  } else {
+    course.reviews.push(review);
+    course.numOfReviews = course.reviews.length;
+  }
+
+  let avgRating = course.reviews.reduce((acc, el) => acc + el.rating, 0);
+
+  course.averageRating = avgRating / course.reviews.length;
+
+  await course.save({ validateBeforeSave: false });
+
+  res.status(200).json({
+    success: true,
+    message: "Review Added Successfully",
+  });
+});
+
+// Get All Reviews
+export const getAllReviews = catchAsyncErrors(async (req, res, next) => {
+  const { courseId } = req.query;
+
+  const course = await Course.findById(courseId);
+
+  if (!course) {
+    return next(new ErrorHandler("No Course Exists with the Given Id.", 404));
+  }
+
+  res.status(200).json({
+    success: true,
+    reviews: course.reviews,
+  });
+});
+
+// Delete Review
+export const deleteReview = catchAsyncErrors(async (req, res, next) => {
+  const { courseId, reviewId } = req.query;
+
+  const course = await Course.findById(courseId);
+
+  if (!course) {
+    return next(new ErrorHandler("No Course Exists with the Given Id.", 404));
+  }
+
+  const reviews = course.reviews.filter(
+    (rev) => rev._id.toString() !== reviewId.toString()
+  );
+
+  let avgRating = reviews.reduce((acc, el) => acc + el.rating, 0);
+
+  avgRating = avgRating / reviews.length;
+
+  const numOfReviews = reviews.length;
+
+  await Course.findByIdAndUpdate(
+    courseId,
+    {
+      reviews,
+      averageRating: avgRating,
+      numOfReviews,
+    },
+    {
+      new: true,
+    }
+  );
+
+  res.status(200).json({
+    success: true,
+  });
+});

@@ -1,8 +1,11 @@
 import express from "express";
 import {
+  createCourseReview,
   createNewCourse,
   deleteCourse,
+  deleteReview,
   getAllCourses,
+  getAllReviews,
   getCourseDetails,
   getInstructorCourses,
   updateCourse,
@@ -24,5 +27,11 @@ router
   .get(getCourseDetails)
   .put(isAuthenticated, singleUpload, updateCourse)
   .delete(isAuthenticated, deleteCourse);
+
+router.route("/user/review").put(isAuthenticated, createCourseReview);
+router
+  .route("/user/reviews")
+  .get(getAllReviews)
+  .delete(isAuthenticated, deleteReview);
 
 export default router;
