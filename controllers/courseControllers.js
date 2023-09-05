@@ -28,7 +28,9 @@ export const getAllCourses = catchAsyncErrors(async (req, res, next) => {
 export const getCourseDetails = catchAsyncErrors(async (req, res, next) => {
   const { id } = req.params;
 
-  const course = await Course.findById(id).select("-sections.lectures.video");
+  const course = await Course.findById(id)
+    .select("-sections.lectures.video")
+    .populate("instructor", "name email avatar");
 
   if (!course) {
     return next(new ErrorHandler("No Course Found with the given Id.", 404));
