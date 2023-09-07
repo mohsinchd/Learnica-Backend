@@ -21,6 +21,7 @@ app.use(cookieParser());
 import userRoutes from "./routes/userRoutes.js";
 import courseRoutes from "./routes/courseRoutes.js";
 import sectionRoutes from "./routes/sectionRoutes.js";
+import cartRoutes from "./routes/cartRoutes.js";
 
 // "/" route
 
@@ -38,6 +39,7 @@ app.get("/", (req, res, next) => {
 app.use("/api/v1/user", userRoutes);
 app.use("/api/v1/course", courseRoutes);
 app.use("/api/v1/section", sectionRoutes);
+app.use("/api/v1/cart", cartRoutes);
 
 export default app;
 
