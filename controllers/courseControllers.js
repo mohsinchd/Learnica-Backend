@@ -7,11 +7,14 @@ import cloudinary from "cloudinary";
 
 // Get all courses - Public
 export const getAllCourses = catchAsyncErrors(async (req, res, next) => {
-  const apiFeatures = new ApiFeatures(Course.find(), req.query)
+  const apiFeatures = new ApiFeatures(
+    Course.find().populate("instructor", "name email"),
+    req.query
+  )
     .search()
     .searchCategory()
     .filter()
-    .pagination(10);
+    .pagination(6);
 
   const courses = await apiFeatures.query;
 
