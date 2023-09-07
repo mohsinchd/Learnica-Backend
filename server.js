@@ -30,6 +30,8 @@ const server = app.listen(PORT, () => {
   console.log(`Server is running on PORT: ${PORT}`);
 });
 
+server.timeout = 300000;
+
 // Unhandled Promise Rejections
 process.on("unhandledRejection", (error) => {
   console.log(`Error: ${error.message}`);
