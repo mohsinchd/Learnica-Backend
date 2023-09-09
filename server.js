@@ -2,6 +2,7 @@ import app from "./app.js";
 import { config } from "dotenv";
 import { connectDB } from "./config/connectDb.js";
 import cloudinary from "cloudinary";
+import Razorpay from "razorpay";
 
 // Uncaught Rejections
 process.on("uncaughtException", (error) => {
@@ -17,6 +18,12 @@ config({
 
 // Database connection
 connectDB();
+
+// Razor Pay configuration
+export const instance = new Razorpay({
+  key_id: process.env.RAZOR_PAY_KEY,
+  key_secret: process.env.RAZOR_PAY_SECRET,
+});
 
 // Cloudinary configuration
 cloudinary.v2.config({
