@@ -26,11 +26,9 @@ const userSchema = new mongoose.Schema({
   },
   enrolledCourses: [
     {
-      course: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Course",
-      },
-      poster: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Course",
+      required: true,
     },
   ],
   avatar: {

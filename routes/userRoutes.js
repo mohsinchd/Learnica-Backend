@@ -2,6 +2,8 @@ import express from "express";
 import {
   changePassword,
   forgotPassword,
+  getEnrolledCourseDetails,
+  getEnrolledCourses,
   getUserProfile,
   loginUser,
   logoutUser,
@@ -12,6 +14,7 @@ import {
 } from "../controllers/userControllers.js";
 import singleUpload from "../middlewares/multer.js";
 import { isAuthenticated } from "../middlewares/auth.js";
+import { hasPurchased } from "../middlewares/hasPurchased.js";
 
 const router = express.Router();
 // Register User
@@ -36,5 +39,11 @@ router.route("/resetPassword/:token").put(resetPassword);
 router
   .route("/updateProfilePicture")
   .put(singleUpload, isAuthenticated, updateProfilePicture);
+
+// Get User enrolled Courses
+router.route("/enrolledCourses").get(isAuthenticated, getEnrolledCourses);
+router
+  .route("/enrolledCourse/:id")
+  .get(isAuthenticated, hasPurchased, getEnrolledCourseDetails);
 
 export default router;

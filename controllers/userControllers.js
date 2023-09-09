@@ -5,6 +5,7 @@ import cloudinary from "cloudinary";
 import getDataUri from "../utils/dataUri.js";
 import { sendToken } from "../utils/sendToken.js";
 import { sendEmail } from "../utils/sendEmail.js";
+import { Course } from "../models/Course.js";
 import crypto from "crypto";
 
 // Register New User
@@ -217,3 +218,29 @@ export const updateProfilePicture = catchAsyncErrors(async (req, res, next) => {
     message: "Profile Picture Updated.",
   });
 });
+
+// Get enrolled Courses - Private
+export const getEnrolledCourses = catchAsyncErrors(async (req, res, next) => {
+  const courses = await User.findOne({ _id: req.user._id }).populate(
+    "enrolledCourses",
+    "title poster averageRating numOfReviews"
+  );
+
+  res
+    .status(200)
+    .json({ success: true, enrolledCourses: courses.enrolledCourses });
+});
+
+export const getEnrolledCourseDetails = catchAsyncErrors(
+  async (req, res, next) => {
+    const { id } = req.params;
+    const course = await Course.findById(id).populate(
+      "instructor",
+      "name email avatar"
+    );
+    res.status(200).json({
+      success: true,
+      course,
+    });
+  }
+);
