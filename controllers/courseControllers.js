@@ -110,7 +110,7 @@ export const updateCourse = catchAsyncErrors(async (req, res, next) => {
   if (title) course.title = title;
   if (description) course.description = description;
   if (category) course.category = category;
-  if (price) course.price = price;
+  if (price) course.price = Number(price);
   if (file) {
     await cloudinary.v2.uploader.destroy(course.poster.public_id);
     const fileUri = getDataUri(file);
