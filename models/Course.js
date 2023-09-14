@@ -100,10 +100,7 @@ const courseSchema = new mongoose.Schema({
         ref: "User",
         required: true,
       },
-      name: {
-        type: String,
-        required: true,
-      },
+
       rating: {
         type: Number,
         required: true,
