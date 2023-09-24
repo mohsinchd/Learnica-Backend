@@ -33,7 +33,15 @@ export const getCourseDetails = catchAsyncErrors(async (req, res, next) => {
 
   const course = await Course.findById(id)
     .select("-sections.lectures.video")
-    .populate("instructor", "name email avatar");
+    .populate("instructor", "name email avatar")
+    .populate({
+      path: "reviews",
+      select: "rating comment user",
+      populate: {
+        path: "user",
+        select: "avatar name",
+      },
+    });
 
   if (!course) {
     return next(new ErrorHandler("No Course Found with the given Id.", 404));
@@ -216,7 +224,14 @@ export const createCourseReview = catchAsyncErrors(async (req, res, next) => {
 export const getAllReviews = catchAsyncErrors(async (req, res, next) => {
   const { courseId } = req.query;
 
-  const course = await Course.findById(courseId);
+  const course = await Course.findById(courseId).populate({
+    path: "reviews",
+    select: "user rating comment",
+    populate: {
+      path: "user",
+      select: "avatar name",
+    },
+  });
 
   if (!course) {
     return next(new ErrorHandler("No Course Exists with the Given Id.", 404));
