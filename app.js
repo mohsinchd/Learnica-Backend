@@ -23,6 +23,7 @@ import courseRoutes from "./routes/courseRoutes.js";
 import sectionRoutes from "./routes/sectionRoutes.js";
 import cartRoutes from "./routes/cartRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
+import analyticsRoutes from "./routes/analyticsRoutes.js";
 
 // "/" route
 
@@ -42,6 +43,7 @@ app.use("/api/v1/course", courseRoutes);
 app.use("/api/v1/section", sectionRoutes);
 app.use("/api/v1/cart", cartRoutes);
 app.use("/api/v1/payment", paymentRoutes);
+app.use("/api/v1/analytics", analyticsRoutes);
 
 export default app;
 
