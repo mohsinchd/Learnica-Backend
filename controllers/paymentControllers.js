@@ -3,6 +3,8 @@ import { User } from "../models/User.js";
 import { catchAsyncErrors } from "../middlewares/catchAsyncErrors.js";
 import { instance } from "../server.js";
 import crypto from "crypto";
+import { Course } from "../models/Course.js";
+import { Earning } from "../models/Earnings.js";
 
 export const checkout = catchAsyncErrors(async (req, res, next) => {
   const options = {
@@ -34,10 +36,20 @@ export const paymentVerfication = catchAsyncErrors(async (req, res, next) => {
 
   if (isAuthentic) {
     const user = await User.findOne({ _id: userId });
+    const course = await Course.findOne({ _id: courseId });
 
     user.enrolledCourses.push(courseId);
+    course.enrolledStudents.push(userId);
+
+    await Earning.create({
+      teacher: course.instructor,
+      course: courseId,
+      earningsAmount: course.price,
+      transactionDate: Date.now(),
+    });
 
     await user.save();
+    await course.save();
 
     res.redirect(
       `http://localhost:3000/paymentsuccess?reference=${razorpay_payment_id}`
