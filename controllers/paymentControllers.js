@@ -4,7 +4,7 @@ import { catchAsyncErrors } from "../middlewares/catchAsyncErrors.js";
 import { instance } from "../server.js";
 import crypto from "crypto";
 import { Course } from "../models/Course.js";
-import { Earning } from "../models/Earnings.js";
+import { Earning, AdminEarning } from "../models/Earnings.js";
 
 export const checkout = catchAsyncErrors(async (req, res, next) => {
   const options = {
@@ -38,13 +38,25 @@ export const paymentVerfication = catchAsyncErrors(async (req, res, next) => {
     const user = await User.findOne({ _id: userId });
     const course = await Course.findOne({ _id: courseId });
 
+    let totalCoursePrice = course.price;
+
+    let adminEarn = totalCoursePrice * 0.2;
+    let teacherEarn = totalCoursePrice * 0.8;
+
     user.enrolledCourses.push(courseId);
     course.enrolledStudents.push(userId);
 
     await Earning.create({
       teacher: course.instructor,
       course: courseId,
-      earningsAmount: course.price,
+      earningsAmount: teacherEarn,
+      transactionDate: Date.now(),
+    });
+
+    await AdminEarning.create({
+      student: userId,
+      course: courseId,
+      earningsAmount: adminEarn,
       transactionDate: Date.now(),
     });
 
