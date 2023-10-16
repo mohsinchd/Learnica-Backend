@@ -64,7 +64,7 @@ export const paymentVerfication = catchAsyncErrors(async (req, res, next) => {
     await course.save();
 
     res.redirect(
-      `http://localhost:3000/paymentsuccess?reference=${razorpay_payment_id}`
+      `${process.env.FRONTEND_URL}/paymentsuccess?reference=${razorpay_payment_id}`
     );
   } else {
     res.status(400).json({
