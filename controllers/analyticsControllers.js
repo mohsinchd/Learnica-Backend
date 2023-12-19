@@ -3,7 +3,6 @@ import ErrorHandler from "../utils/errorHandler.js";
 import { Course } from "../models/Course.js";
 import { AdminEarning, Earning } from "../models/Earnings.js";
 import { User } from "../models/User.js";
-import mongoose from "mongoose";
 
 export const getTeacherAnalytics = catchAsyncErrors(async (req, res, next) => {
   const teacherCourses = await Course.find({ instructor: req.user._id });
