@@ -11,6 +11,7 @@ import {
   resetPassword,
   updateProfilePicture,
   updateUserProfile,
+  verifyUser,
 } from "../controllers/userControllers.js";
 import singleUpload from "../middlewares/multer.js";
 import { isAuthenticated } from "../middlewares/auth.js";
@@ -21,6 +22,8 @@ const router = express.Router();
 router.route("/register").post(singleUpload, registerUser);
 // Login User
 router.route("/login").post(loginUser);
+// Verify user
+router.route("/verify/:email").get(verifyUser);
 // Logout User
 router.route("/logout").get(logoutUser);
 // Get Logged In user profile & update Profile
