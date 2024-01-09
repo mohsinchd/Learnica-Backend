@@ -5,6 +5,7 @@ import {
   multipleVerfication,
   paymentVerfication,
 } from "../controllers/paymentControllers.js";
+import { isAuthenticated } from "../middlewares/auth.js";
 
 const router = express.Router();
 

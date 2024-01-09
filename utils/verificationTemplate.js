@@ -38,7 +38,7 @@ export const verificationTemplate = (url) => {
       display: inline-block;
       padding: 10px 20px;
       background-color: #007bff;
-      color: #fff;
+      color: #333;
       text-decoration: none;
       border-radius: 5px;
       margin-top: 20px;
