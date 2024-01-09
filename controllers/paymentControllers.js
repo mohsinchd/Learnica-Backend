@@ -5,6 +5,7 @@ import { instance } from "../server.js";
 import crypto from "crypto";
 import { Course } from "../models/Course.js";
 import { Earning, AdminEarning } from "../models/Earnings.js";
+import { Cart } from "../models/Cart.js";
 
 export const checkout = catchAsyncErrors(async (req, res, next) => {
   const options = {
@@ -121,6 +122,8 @@ export const multipleVerfication = catchAsyncErrors(async (req, res, next) => {
         transactionDate: Date.now(),
       });
     }
+
+    await Cart.findOneAndRemove({ user: userId });
 
     await user.save();
 
