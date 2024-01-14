@@ -17,7 +17,6 @@ Follow these steps to set up and run the Learnica backend on your local machine.
 
 ### Installation
 
-```bash
 git clone https://github.com/mohsinchd/Learnica-Backend.git
 cd Learnica-Backend
 npm install
@@ -43,13 +42,17 @@ FRONTEND_URL=<your-frontend-url>
 API_URL=http://localhost:5000
 
 ### To Run the API
+
 npm run dev
 
-## Backend Deployment
+### Backend Deployment
 
 The backend of LEARNICA is deployed using Railway and is accessible at the following link:
 
 [LEARNICA Backend Deployment](https://learnica-backend-production.up.railway.app/)
 
 Thank you for your interest in LEARNICA! If you have any questions or suggestions, please don't hesitate to reach out.
+
+```
+
 ```
