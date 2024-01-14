@@ -17,6 +17,7 @@ Follow these steps to set up and run the Learnica backend on your local machine.
 
 ### Installation
 
+```bash
 git clone https://github.com/mohsinchd/Learnica-Backend.git
 cd Learnica-Backend
 npm install
@@ -40,6 +41,7 @@ RAZOR_PAY_KEY=<your-razorpay-key <Go to RazorPay SignUp and generate the credent
 RAZOR_PAY_SECRET=<your-razorpay-secret <Go to RazorPay SignUp and generate the credentials from the account settings.>>
 FRONTEND_URL=<your-frontend-url>
 API_URL=http://localhost:5000
+```
 
 ### To Run the API
 
@@ -52,7 +54,3 @@ The backend of LEARNICA is deployed using Railway and is accessible at the follo
 [LEARNICA Backend Deployment](https://learnica-backend-production.up.railway.app/)
 
 Thank you for your interest in LEARNICA! If you have any questions or suggestions, please don't hesitate to reach out.
-
-```
-
-```
