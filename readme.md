@@ -4,7 +4,7 @@ Learnica is an online learning platform that empowers users to be both instructo
 
 ## Project Overview
 
-Learnica's backend is built using the MERN (MongoDB, Express.js, React, Node.js) stack. It manages user authentication, course creation, enrollment, and transaction processing.
+Learnica's backend is built using the (MongoDB, Express.js, Node.js) stack. It manages user authentication, course creation, enrollment, and transaction processing.
 
 ## Getting Started
 
